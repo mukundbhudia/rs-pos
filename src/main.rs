@@ -11,32 +11,23 @@ fn checkout(items: Vec<&str>, price_map: HashMap<&str, u16>) -> u16 {
     let mut offers_map: HashMap<&str, u16> = HashMap::new();
 
     for item in items {
-        let checkout_count: u16;
-        checkout_count = match checkout_map.get(item) {
-            Some(cost) => *cost,
-            None => 1
-        };
-
-        checkout_map.insert(item, checkout_count);
+        let checkout_count = checkout_map.entry(item).or_insert(0);
+        *checkout_count += 1;
+        println!("Checkout count: {}", checkout_count);
 
         offers_map.entry(item).or_insert(0);
 
-        let apple_count: u16;
-        apple_count = match checkout_map.get("A") {
-            Some(apple_count) => *apple_count,
-            None => 0
-        };
+        let apple_count = checkout_map.entry("A").or_insert(0);
 
-        let banana_count: u16;
-        banana_count = match checkout_map.get("B") {
-            Some(banana_count) => *banana_count,
-            None => 0
-        };
+        let banana_count = checkout_map.entry("B").or_insert(0);
 
-        if apple_count % 3 == 0 && offers_map.contains_key("A") && apple_count / 3 > offers_map["A"] {
+        println!("Apple count: {}, banana count: {}", apple_count, banana_count);
+
+        if *apple_count % 3 == 0 && offers_map.contains_key("A") && *apple_count / 3 > offers_map["A"] {
             total -= 25;
-            // offers_map["A"] += 1
-        } else if banana_count % 3 == 0 && offers_map.contains_key("A") && banana_count / 3 > offers_map["B"] {
+            let current_apple_offer = offers_map.entry("A").or_insert(0);
+            *current_apple_offer += 1;
+        } else if *banana_count % 3 == 0 && offers_map.contains_key("A") && *banana_count / 3 > offers_map["B"] {
             total -= 20;
         }
 
