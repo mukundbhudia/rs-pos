@@ -20,7 +20,7 @@ fn checkout(items: Vec<&str>, price_map: HashMap<&str, u16>) -> u16 {
         let banana_count = checkout_map.get("B").unwrap_or(&0);
 
         if apple_count % 3 == 0 && offers_map.contains_key("A") && apple_count / 3 > offers_map["A"] {
-            total -= 25;
+            total -= price_map["A"];
             let current_apple_offer = offers_map.entry("A").or_insert(0);
             *current_apple_offer += 1;
         } else if banana_count % 3 == 0 && offers_map.contains_key("B") && banana_count / 3 > offers_map["B"] {
@@ -30,7 +30,6 @@ fn checkout(items: Vec<&str>, price_map: HashMap<&str, u16>) -> u16 {
         }
 
         total += price_map[item];
-        println!("Found {} in basket", item);
     }
     total
 }
