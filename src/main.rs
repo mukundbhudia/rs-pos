@@ -29,9 +29,13 @@ fn checkout(items: Vec<&str>, price_map: HashMap<&str, u16>) -> u16 {
             *current_banana_offer += 1;
         }
 
-        total += price_map[item];
+        total += scan_item(item, &price_map);
     }
     total
+}
+
+fn scan_item(item_code: &str, price_map: &HashMap<&str, u16>) -> u16 {
+    *price_map.get(item_code).unwrap_or(&0)
 }
 
 #[test]
